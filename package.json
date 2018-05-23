@@ -1,0 +1,12 @@
+{
+  "name": "Word-Chains",
+  "version": "1.0.0",
+  "main": "wordChains.js",
+  "repository": "https://github.com/jluton/Word-Chains.git",
+  "author": "Jake Luton <jake.luton92@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "node-fetch": "^2.1.2"
+  }
+}
