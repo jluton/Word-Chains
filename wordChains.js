@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const Queue = require('./queue');
 
 // Get dictionary data, create a set of every word
 const generateWordSet = function (url = 'http://codekata.com/data/wordlist.txt') {
@@ -8,26 +9,8 @@ const generateWordSet = function (url = 'http://codekata.com/data/wordlist.txt')
     .catch((err) => { throw err; });
 };
 
-const Queue = function () {
-  this.storage = {};
-  this.start = 0;
-  this.end = 0;
-};
-
-Queue.prototype.enqueue = function (item) {
-  this.storage[this.end++] = item;
-};
-
-Queue.prototype.dequeue = function () {
-  if (this.getSize()) {
-    var item = this.storage[this.start];
-    delete this.storage[this.start++];
-    return item;
-  }
-};
-
-Queue.prototype.getSize = function () {
-  return this.end - this.start;
+const replaceStringCharacter = function (string, index, newCharacter) {
+  return string.slice(0, index) + newCharacter + string.slice(index + 1);
 }
 
 const findWordChain = function (string1, string2) {
@@ -35,11 +18,19 @@ const findWordChain = function (string1, string2) {
   const secondaryQueue = new Queue();
   // Queues will contain arrays of strings
 
-  preferredQueue.push([string1]);
+  preferredQueue.push([string1.toUpperCase()]);
 
   while (preferredQueue.getSize() || secondaryQueue.getSize()) {
     const item = preferredQueue.getSize() ? preferredQueue.dequeue() : secondaryQueue.dequeue();
-    
+    currentWord = item[item.length - 1];
+    for (let i = 0; i < currentWord.length; i++) {
+      if (
+        currentWord[i] !== string2[i].toUpperCase() && 
+        replaceStringCharacter(currentWord[i], i, string2[i]) in dictionaryWords) 
+      {
+        
+      }
+    }
   }
 
   // while there is items in one of the queue
