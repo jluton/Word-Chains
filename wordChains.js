@@ -9,12 +9,26 @@ const generateWordSet = function (url = 'http://codekata.com/data/wordlist.txt')
 };
 
 const Queue = function () {
-
+  this.storage = {};
+  this.start = 0;
+  this.end = 0;
 };
 
-Queue.prototype.push = function (item) {};
+Queue.prototype.enqueue = function (item) {
+  this.storage[this.end++] = item;
+};
 
-Queue.prototype.pop = function () {};
+Queue.prototype.dequeue = function () {
+  if (this.getSize()) {
+    var item = this.storage[this.start];
+    delete this.storage[this.start++];
+    return item;
+  }
+};
+
+Queue.prototype.getSize = function () {
+  return this.end - this.start;
+}
 
 const findWordChain = function (string1, string2) {
   const preferredQueue = new Queue();
@@ -23,10 +37,16 @@ const findWordChain = function (string1, string2) {
 
   preferredQueue.push([string1]);
 
+  while (preferredQueue.getSize() || secondaryQueue.getSize()) {
+    const item = preferredQueue.getSize() ? preferredQueue.dequeue() : secondaryQueue.dequeue();
+    
+  }
+
   // while there is items in one of the queue
   // pop item off preferred queue. If empty, pop off secondary queue. Save item.
   // iterate over each letter in last string of item
   // if item[i] does not equal string2[i], change letter to string2[i], add to new copy of item and push to preferred queue
   // iterate over all other letter changes, push to secondary queue
   // if letter change results in item === string2, exit loop and print resulting array.
+
 };
