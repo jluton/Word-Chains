@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
 const Queue = require('./queue');
 
+const letters = [...Array(26)].map((val, i) => String.fromCharCode(i + 65));
+
 // Get dictionary data, create a set of every word
 const generateWordSet = function (url = 'http://codekata.com/data/wordlist.txt') {
   return fetch(url)
@@ -23,13 +25,30 @@ const findWordChain = function (string1, string2) {
   while (preferredQueue.getSize() || secondaryQueue.getSize()) {
     const item = preferredQueue.getSize() ? preferredQueue.dequeue() : secondaryQueue.dequeue();
     currentWord = item[item.length - 1];
+    if (currentWord === string2.toUpperCase()) {
+      item.push(currentWord);
+      item.forEach(item => console.log(item));
+      break;
+    }
+
     for (let i = 0; i < currentWord.length; i++) {
-      if (
-        currentWord[i] !== string2[i].toUpperCase() && 
-        replaceStringCharacter(currentWord[i], i, string2[i]) in dictionaryWords) 
-      {
-        
+      const currentLetter = currentWord[i];
+      const targetLetter = string2[i].toUpperCase();
+
+      if (currentLetter !== targetLetter) {
+        const newWord = replaceStringCharacter(currentWord, i, targetLetter) 
+        if (newWord in dictionaryWords) {
+          const newItem = item.slice().push(newWord);
+          preferredQueue.push(newItem);
+        }
       }
+
+      letters.forEach((letter) => {
+        if (letter !== currentLetter && letter !== targetLetter) {
+          const newItem = replaceStringCharacter(currentWord, i, letter);
+          secondaryQueue.push(newItem); 
+        }
+      });
     }
   }
 
